@@ -92,9 +92,9 @@ class OrdersController
         return $output;
     }
 
-    public static function displayOrders()
+    public function displayOrders()
     {
-        $allOrders = OrdersModel::getAll();
+        $allOrders = $this->ordersModel->getAll();
         ob_start();
         require_once $_SERVER['DOCUMENT_ROOT'] . '/Views/displayOrders.php';
         $output = ob_get_clean();
