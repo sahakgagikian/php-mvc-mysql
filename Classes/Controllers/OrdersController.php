@@ -10,14 +10,25 @@ use Models\UsersModel;
 class OrdersController
 {
 
-    public static function addToCart()
+    private $ordersModel;
+    private $orderProductsModel;
+    private $usersModel;
+
+    public function __construct()
+    {
+        $this->ordersModel = new OrdersModel();
+        $this->orderProductsModel = new OrderProductsModel();
+        $this->usersModel = new UsersModel();
+    }
+
+    public function addToCart()
     {
         $products = $_POST['data'];
         $_SESSION['products'] = json_decode($products, true);
         return json_encode(['success' => true]);
     }
 
-    public static function cart()
+    public function cart()
     {
         $firstName = $lastName = $email = "";
         $firstNameErr = $lastNameErr = $emailErr = "";
@@ -56,20 +67,20 @@ class OrdersController
                     $user_isOK = false;
                 }
                 if ($user_isOK) {
-                    UsersModel::setUser($firstName, $lastName, $email);
+                    $this->usersModel->setUser($firstName, $lastName, $email);
 
                     $userId = DBConnection::getInstance()::connect()->query('SELECT max(id) as id FROM users WHERE email="' . $email . '"');
                     $userId = $userId->fetch()['id'];
                     $sum = $_SESSION['sum'];
                     $orderDate = date("Y-m-d h:i:sa");
-                    OrdersModel::setOrder($userId, $sum, $orderDate);
+                    $this->ordersModel->setOrder($userId, $sum, $orderDate);
 
                     $orderId = DBConnection::getInstance()::connect()->query('SELECT max(id) as id FROM orders WHERE user_id="' . $userId . '"');
                     $orderId = $orderId->fetch()['id'];
                     foreach ($_SESSION['products'] as $product) {
                         $prodId = $product['id'];
                         $qty = $product['quantity'];
-                        OrderProductsModel::setProductOrder($orderId, $prodId, $qty);
+                        $this->orderProductsModel->setProductOrder($orderId, $prodId, $qty);
                     }
                 }
             }

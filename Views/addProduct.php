@@ -1,3 +1,9 @@
+<?php
+require('./Views/header.php');
+require('./Views/style.php');
+require('./Views/script.php');
+?>
+
 <form method="post" action="/addprod">
     <div>Name:</div><input type="text" name="name" value="<?= $name ?>">
     <span class="error">* <?= $nameErr ?></span>
@@ -10,3 +16,5 @@
     <br><br>
     <input type="submit" name="submit" value="Add Product">
 </form>
+
+<?php require('./Views/footer.php');

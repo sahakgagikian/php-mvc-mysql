@@ -7,16 +7,23 @@ use Models\ProductsModel;
 class ProductsController
 {
 
-    public static function home()
+    private $model;
+
+    public function __construct()
     {
-        $products = ProductsModel::getAll();
+        $this->model = new ProductsModel();
+    }
+
+    public function home()
+    {
+        $products = $this->model->getAll();
         ob_start();
         require_once $_SERVER['DOCUMENT_ROOT'] . '/Views/home.php';
         $output = ob_get_clean();
         return $output;
     }
 
-    public static function addProduct()
+    public function addProduct()
     {
         $name = $description = $price = "";
         $nameErr = $descriptionErr = $priceErr = "";
@@ -51,7 +58,7 @@ class ProductsController
                     $prod_isOK = false;
                 }
                 if ($prod_isOK) {
-                    ProductsModel::setProduct($name, $description, $price);
+                    $this->model->setProduct($name, $description, $price);
                 }
             }
         }

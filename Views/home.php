@@ -1,3 +1,9 @@
+<?php
+require('./Views/header.php');
+require('./Views/style.php');
+require('./Views/script.php');
+?>
+
 <h1>All products</h1>
 
 <?php foreach ($products as $product): ?>
@@ -37,3 +43,5 @@
 <a href="/addprod">
     <input type='button' class="btn-input" value='Add product'>
 </a>
+
+<?php require('./Views/footer.php');

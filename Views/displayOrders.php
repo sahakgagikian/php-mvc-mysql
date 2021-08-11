@@ -1,3 +1,9 @@
+<?php
+require('./Views/header.php');
+require('./Views/style.php');
+require('./Views/script.php');
+?>
+
 <table>
     <tr>
         <th>Order ID</th>
@@ -14,3 +20,5 @@
         </tr>
     <?php endforeach; ?>
 </table>
+
+<?php require('./Views/footer.php');

@@ -1,4 +1,8 @@
 <?php
+require('./Views/header.php');
+require('./Views/style.php');
+require('./Views/script.php');
+
 $products = $_SESSION["products"];
 count($products);
 $i = 0;
@@ -62,3 +66,5 @@ $total = 0;
         <input type="submit" name="submit" value="Confirm order">
     </form>
 <?php endif; ?>
+
+<?php require('./Views/footer.php');
