@@ -13,7 +13,7 @@ require('./Views/script.php');
             <th>E-mail</th>
             <th>Sum</th>
             <th>Order date</th>
-            <th>Product ID</th>
+            <th>Product details</th>
         </tr>
         <?php foreach ($formattedOrders as $formattedOrder): ?>
             <tr>
