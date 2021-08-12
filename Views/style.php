@@ -22,8 +22,16 @@
         width: 300px;
     }
 
-    tr:nth-child(even) {
+    tr {
         background-color: #dddddd;
+    }
+
+    tr:first-child {
+        background-color: gray;
+    }
+
+    .nested {
+        background-color: aliceblue;
     }
 
     button {

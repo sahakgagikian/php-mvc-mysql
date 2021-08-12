@@ -69,14 +69,18 @@ class OrdersController
                 if ($user_isOK) {
                     $this->usersModel->setUser($firstName, $lastName, $email);
 
-                    $userId = DBConnection::getInstance()::connect()->query('SELECT max(id) as id FROM users WHERE email="' . $email . '"');
-                    $userId = $userId->fetch()['id'];
+                    $userIdSQL = 'SELECT max(id) as id FROM users WHERE email=:email';
+                    $userIdStmt = DBConnection::getInstance()::connect()->prepare($userIdSQL);
+                    $userIdStmt->execute(['email' => $email]);
+                    $userId = $userIdStmt->fetch()['id'];
                     $sum = $_SESSION['sum'];
                     $orderDate = date("Y-m-d h:i:sa");
                     $this->ordersModel->setOrder($userId, $sum, $orderDate);
 
-                    $orderId = DBConnection::getInstance()::connect()->query('SELECT max(id) as id FROM orders WHERE user_id="' . $userId . '"');
-                    $orderId = $orderId->fetch()['id'];
+                    $orderIdSQL = 'SELECT max(id) as id FROM orders WHERE user_id=:user_id';
+                    $orderIdStmt = DBConnection::getInstance()::connect()->prepare($orderIdSQL);
+                    $orderIdStmt->execute(['user_id' => $userId]);
+                    $orderId = $orderIdStmt->fetch()['id'];
                     foreach ($_SESSION['products'] as $product) {
                         $prodId = $product['id'];
                         $qty = $product['quantity'];
@@ -94,9 +98,34 @@ class OrdersController
 
     public function displayOrders()
     {
-        $allOrders = $this->ordersModel->getAll();
+        $allOrders = $this->ordersModel->getOrdersData();
         ob_start();
+
+        $formattedOrders = [];
+
+        foreach ($allOrders as $order) {
+            if (!isset($formattedOrders[$order['order_id']])) {
+                $formattedOrders[$order['order_id']] = [
+                    'order_id' => $order['order_id'],
+                    'user_id' => $order['user_id'],
+                    'first_name' => $order['first_name'],
+                    'last_name' => $order['last_name'],
+                    'email' => $order['email'],
+                    'sum' => $order['sum'],
+                    'order_date' => $order['order_date'],
+                    'products' => []
+                ];
+            }
+            $formattedOrders[$order['order_id']]['products'][] = [
+                'id' => $order['product_id'],
+                'name' => $order['name'],
+                'description' => $order['description'],
+                'price' => $order['price'],
+                'qty' => $order['qty'],
+            ];
+        }
         require_once $_SERVER['DOCUMENT_ROOT'] . '/Views/displayOrders.php';
+
         $output = ob_get_clean();
         return $output;
     }

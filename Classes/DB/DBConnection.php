@@ -33,7 +33,7 @@ class DBConnection
         return self::$instance;
     }
 
-    public static function connect()
+    public function connect()
     {
         return self::$pdo;
     }
